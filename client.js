@@ -5,6 +5,7 @@ const ws = new WebSocket(url);
 let isLoggedIn = false;
 let messageInterval = null; // To hold the interval ID
 const chatContainer = document.getElementById("chat-container");
+const historyContainer = document.getElementById("history-container");
 const userCountSpan = document.getElementById("user-count");
 const totalValueSpan = document.getElementById("total-value");
 
@@ -50,6 +51,23 @@ function displayChat(newMessage) {
     chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll
 }
 
+function displayHistory(entry) {
+    let historyText = document.createElement("p");
+    historyText.className = 'history-entry';
+    
+    const timeOnly = entry.timestamp.split('T')[1].split('.')[0]; // Extract HH:MM:SS
+    
+    historyText.innerHTML = `
+        <span class="entry-id">#${entry.id}</span> 
+        <span class="entry-user">${escapeHtml(entry.username)}</span> 
+        sent <span class="entry-number">${entry.number}</span> 
+        <span class="entry-time">at ${timeOnly}</span>
+    `;
+    
+    historyContainer.appendChild(historyText);
+    historyContainer.scrollTop = historyContainer.scrollHeight; // Auto-scroll
+}
+
 ws.onmessage = (event) => {
     const msg = JSON.parse(event.data);
 
@@ -78,6 +96,9 @@ ws.onmessage = (event) => {
                 messageInterval = null; // Set to null to indicate it's stopped
             }
         }
+    } else if (msg.type === 'history_update') {
+        // Display the number history entry
+        displayHistory(msg.entry);
     } else {
         // Handle regular 'message' and 'system' (join/leave) messages
         displayChat(msg);
