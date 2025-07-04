@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Web Server</title>
+    <style>
+        body { font-family: sans-serif; }
+        #chat-container { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+        #chat-container p { margin: 5px 0; }
+        .system-message { color: gray; font-style: italic; }
+        textarea { width: 80%; }
+    </style>
+</head>
+<body>
+    <h1>Real-time Chat</h1>
+    <p>Online Users: <span id="user-count">0</span> | Total Value: <span id="total-value">0</span></p>
+    <div id="chat-container"></div>
+    <!-- Input elements removed for automated message sending -->
+    <script src="client.js"></script>
+</body>
+</html>
