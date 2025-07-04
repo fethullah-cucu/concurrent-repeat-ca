@@ -8,38 +8,37 @@ const chatContainer = document.getElementById("chat-container");
 const userCountSpan = document.getElementById("user-count");
 const totalValueSpan = document.getElementById("total-value");
 
-function attemptLogin() {
-    const username = prompt("Enter your username:");
+function attemptLogin() { 
+    const username = prompt("Enter your username:"); 
     if (username && username.trim()) {
         // Send a login message to the server for validation
-        ws.send(JSON.stringify({ type: 'login', username: username.trim() }));
+        ws.send(JSON.stringify({ type: 'login', username: username.trim() })); //
     } else {
         displayChat({ type: 'system', data: 'Login cancelled. Refresh to try again.' });
     }
 }
 
-ws.onopen = () => {
+ws.onopen = () => { // when all connection is ok via browser, everything is perfect
     console.log('Connected to server.');
-    attemptLogin();
+    attemptLogin(); 
 };
 
-/**
- * Generates a random number and sends it as a chat message.
- */
+//Generates a random number and sends it as a chat message.
 function sendRandomNumber() {
     if (isLoggedIn) {
-        const randomNumber = Math.floor(Math.random() * 12) + 1;
+        const randomNumber = Math.floor(Math.random() * 12) + 1; 
         const data = {
             type: 'message',
             data: randomNumber.toString()
         };
-        ws.send(JSON.stringify(data));
+        ws.send(JSON.stringify(data)); //send the message ( actuallay just numbers ) to the server
     }
 }
 
 function displayChat(newMessage) {
-    let newText = document.createElement("p");
-    if (newMessage.type === 'message') {
+    let newText = document.createElement("p"); 
+    if (newMessage.type === 'message') { 
+        newText.className = 'message';
         newText.innerHTML = `<b>${escapeHtml(newMessage.username)}:</b> ${escapeHtml(newMessage.data)}`;
     } else if (newMessage.type === 'system') {
         newText.className = 'system-message';
@@ -83,7 +82,10 @@ ws.onmessage = (event) => {
     }
 }
 
-ws.onclose = () => {
+ws.onclose = () => {ws.onopen = () => { 
+    console.log('Connected to server.');
+    attemptLogin();
+};
     isLoggedIn = false;
     displayChat({ type: 'system', data: 'You have been disconnected.' });
 
